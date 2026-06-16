@@ -1,0 +1,76 @@
+{
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "error": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "or": "أو",
+    "nexusGold": "نيكسس جولد"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "admin": "الإدارة",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "changePassword": "تغيير كلمة المرور",
+    "language": "اللغة"
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "displayName": "الاسم المعروض",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "noAccount": "ليس لديك حساب؟",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "verifyEmail": "تحقق من البريد الإلكتروني",
+    "verificationCode": "رمز التحقق",
+    "sendCode": "إرسال رمز التحقق",
+    "codeSent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني.",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "newPassword": "كلمة المرور الجديدة",
+    "forgotPasswordTitle": "نسيت كلمة المرور",
+    "forgotPasswordDesc": "أدخل بريدك الإلكتروني وسنرسل رمز إعادة التعيين.",
+    "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+    "resetPasswordDesc": "أدخل الرمز المُرسل إلى بريدك الإلكتروني وحدد كلمة مرور جديدة.",
+    "verifyEmailTitle": "تحقق من بريدك الإلكتروني",
+    "verifyEmailDesc": "أدخل رمز التحقق المُرسل إلى بريدك الإلكتروني.",
+    "welcomeBack": "مرحباً بعودتك",
+    "createAccount": "انضم إلى نيكسس جولد",
+    "loginSubtitle": "الوصول إلى حساب التداول المميز",
+    "registerSubtitle": "ابدأ رحلتك نحو التميز",
+    "logoutSuccess": "تم تسجيل خروجك بنجاح."
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب.",
+    "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+    "passwordMin": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+    "passwordMatch": "كلمتا المرور غير متطابقتين.",
+    "codeRequired": "رمز التحقق مطلوب.",
+    "firstNameRequired": "الاسم الأول مطلوب.",
+    "lastNameRequired": "اسم العائلة مطلوب.",
+    "displayNameRequired": "الاسم المعروض مطلوب."
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بك في نيكسس جولد",
+    "subtitle": "بوابتك المميزة للتداول"
+  },
+  "admin": {
+    "title": "لوحة الإدارة",
+    "accessDenied": "رفض الوصول",
+    "accessDeniedDesc": "ليس لديك صلاحية لعرض هذه الصفحة."
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "changePassword": "تغيير كلمة المرور",
+    "currentPassword": "كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "passwordChanged": "تم تغيير كلمة المرور بنجاح."
+  }
+}

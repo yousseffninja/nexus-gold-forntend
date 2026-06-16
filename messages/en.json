@@ -1,0 +1,76 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "error": "An error occurred. Please try again.",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "back": "Back",
+    "or": "or",
+    "nexusGold": "Nexus Gold"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "settings": "Settings",
+    "logout": "Sign Out",
+    "changePassword": "Change Password",
+    "language": "Language"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Create Account",
+    "email": "Email Address",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "displayName": "Display Name",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "verifyEmail": "Verify Email",
+    "verificationCode": "Verification Code",
+    "sendCode": "Send Verification Code",
+    "codeSent": "Verification code sent to your email.",
+    "resetPassword": "Reset Password",
+    "newPassword": "New Password",
+    "forgotPasswordTitle": "Forgot Password",
+    "forgotPasswordDesc": "Enter your email and we'll send a reset code.",
+    "resetPasswordTitle": "Reset Password",
+    "resetPasswordDesc": "Enter the code sent to your email and set a new password.",
+    "verifyEmailTitle": "Verify Your Email",
+    "verifyEmailDesc": "Enter the verification code sent to your email address.",
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Join Nexus Gold",
+    "loginSubtitle": "Access your premium trading account",
+    "registerSubtitle": "Begin your journey to excellence",
+    "logoutSuccess": "You have been signed out."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "emailInvalid": "Please enter a valid email address.",
+    "passwordMin": "Password must be at least 8 characters.",
+    "passwordMatch": "Passwords do not match.",
+    "codeRequired": "Verification code is required.",
+    "firstNameRequired": "First name is required.",
+    "lastNameRequired": "Last name is required.",
+    "displayNameRequired": "Display name is required."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to Nexus Gold",
+    "subtitle": "Your premium trading portal"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "accessDenied": "Access Denied",
+    "accessDeniedDesc": "You do not have permission to view this page."
+  },
+  "settings": {
+    "title": "Settings",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "passwordChanged": "Password changed successfully."
+  }
+}
