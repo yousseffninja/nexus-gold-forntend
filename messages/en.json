@@ -24,7 +24,7 @@
     "firstName": "First Name",
     "lastName": "Last Name",
     "displayName": "Display Name",
-    "forgotPassword": "Forgot your password?",
+    "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account?",
     "haveAccount": "Already have an account?",
     "verifyEmail": "Verify Email",
@@ -40,10 +40,22 @@
     "verifyEmailTitle": "Verify Your Email",
     "verifyEmailDesc": "Enter the verification code sent to your email address.",
     "welcomeBack": "Welcome Back",
+    "welcomeBackGamer": "Welcome Back, Gamer.",
     "createAccount": "Join Nexus Gold",
     "loginSubtitle": "Access your premium trading account",
+    "loginSubtitleGamer": "Log in to your elite dashboard.",
     "registerSubtitle": "Begin your journey to excellence",
-    "logoutSuccess": "You have been signed out."
+    "logoutSuccess": "You have been signed out.",
+    "securePassword": "Secure Password",
+    "rememberMe": "Remember Me",
+    "socialConnect": "SOCIAL CONNECT",
+    "steam": "Steam",
+    "discord": "Discord",
+    "newToNexusGold": "New to NexusGold?",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy",
+    "copyright": "© 2024 NexusGold Marketplace. All rights reserved."
   },
   "validation": {
     "required": "This field is required.",
@@ -72,5 +84,10 @@
     "newPassword": "New Password",
     "confirmPassword": "Confirm New Password",
     "passwordChanged": "Password changed successfully."
+  },
+  "layout": {
+    "eliteGamingHub": "The Elite Gaming Hub",
+    "liveMarketplaceActive": "Live Marketplace Active",
+    "est2024": "EST. 2024"
   }
 }

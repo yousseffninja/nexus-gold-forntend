@@ -24,7 +24,7 @@
     "firstName": "الاسم الأول",
     "lastName": "اسم العائلة",
     "displayName": "الاسم المعروض",
-    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "forgotPassword": "نسيت كلمة المرور؟",
     "noAccount": "ليس لديك حساب؟",
     "haveAccount": "لديك حساب بالفعل؟",
     "verifyEmail": "تحقق من البريد الإلكتروني",
@@ -40,10 +40,22 @@
     "verifyEmailTitle": "تحقق من بريدك الإلكتروني",
     "verifyEmailDesc": "أدخل رمز التحقق المُرسل إلى بريدك الإلكتروني.",
     "welcomeBack": "مرحباً بعودتك",
+    "welcomeBackGamer": "مرحباً بعودتك، أيها اللاعب.",
     "createAccount": "انضم إلى نيكسس جولد",
     "loginSubtitle": "الوصول إلى حساب التداول المميز",
+    "loginSubtitleGamer": "سجل الدخول إلى لوحة التحكم المميزة.",
     "registerSubtitle": "ابدأ رحلتك نحو التميز",
-    "logoutSuccess": "تم تسجيل خروجك بنجاح."
+    "logoutSuccess": "تم تسجيل خروجك بنجاح.",
+    "securePassword": "كلمة مرور آمنة",
+    "rememberMe": "تذكرني",
+    "socialConnect": "الاتصال الاجتماعي",
+    "steam": "ستيم",
+    "discord": "ديسكورد",
+    "newToNexusGold": "جديد في نيكسس جولد؟",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "cookiePolicy": "سياسة ملفات تعريف الارتباط",
+    "copyright": "© 2024 سوق نيكسس جولد. جميع الحقوق محفوظة."
   },
   "validation": {
     "required": "هذا الحقل مطلوب.",
@@ -72,5 +84,10 @@
     "newPassword": "كلمة المرور الجديدة",
     "confirmPassword": "تأكيد كلمة المرور الجديدة",
     "passwordChanged": "تم تغيير كلمة المرور بنجاح."
+  },
+  "layout": {
+    "eliteGamingHub": "مركز الألعاب المميز",
+    "liveMarketplaceActive": "السوق المباشر نشط",
+    "est2024": "تأسس 2024"
   }
 }
