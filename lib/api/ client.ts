@@ -75,6 +75,16 @@ apiClient.interceptors.response.use(
         };
 
         if (error.response?.status === 401 && !originalRequest._retry) {
+            // Skip 401 handling for login endpoint to allow invalid credential errors to show
+            if (originalRequest.url?.includes('/auth/signin')) {
+                return Promise.reject(error);
+            }
+
+            // Skip 401 handling for signup endpoint as well
+            if (originalRequest.url?.includes('/auth/signup')) {
+                return Promise.reject(error);
+            }
+
             const refreshToken = tokenStorage.getRefresh();
 
             if (!refreshToken) {

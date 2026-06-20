@@ -56,7 +56,10 @@ export function RegisterPage() {
         },
         validationSchema: schema,
         onSubmit: async (values) => {
-            await signUp.mutateAsync(values);
+            await signUp.mutateAsync({
+                ...values,
+                email: values.email.toLowerCase(),
+            });
             router.push("/verify-email");
         },
     });
