@@ -50,10 +50,29 @@ export function LoginPage() {
     const formik = useFormik({
         initialValues: { email: "", password: "" },
         validationSchema: schema,
-        onSubmit: async (values) => {
-            await signIn.mutateAsync(values);
+        onSubmit: async (values, { setSubmitting }) => {
+            setSubmitting(true);
+            try {
+                await signIn.mutateAsync({
+                    ...values,
+                    email: values.email.toLowerCase(),
+                });
+            } catch (error) {
+                // Error is handled by signIn.error state
+            } finally {
+                setSubmitting(false);
+            }
         },
     });
+
+    const handleSubmit = (e: React.MouseEvent) => {
+        e.preventDefault();
+        formik.validateForm().then((errors) => {
+            if (Object.keys(errors).length === 0) {
+                formik.submitForm();
+            }
+        });
+    };
 
     const apiError = signIn.error
         ? ((signIn.error as AxiosError<ApiResponse>).response?.data?.message ??
@@ -105,7 +124,7 @@ export function LoginPage() {
                     </Alert>
                 )}
 
-                <Box component="form" onSubmit={formik.handleSubmit} noValidate>
+                <Box>
                     <Typography variant="caption" sx={{ color: "text.secondary", mb: 0.5, display: "block" }}>
                         {t("email")}
                     </Typography>
@@ -119,6 +138,12 @@ export function LoginPage() {
                         value={formik.values.email}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleSubmit(e as unknown as React.MouseEvent);
+                            }
+                        }}
                         error={formik.touched.email && Boolean(formik.errors.email)}
                         helperText={formik.touched.email && formik.errors.email}
                         disabled={signIn.isPending}
@@ -147,6 +172,12 @@ export function LoginPage() {
                         value={formik.values.password}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleSubmit(e as unknown as React.MouseEvent);
+                            }
+                        }}
                         error={formik.touched.password && Boolean(formik.errors.password)}
                         helperText={formik.touched.password && formik.errors.password}
                         disabled={signIn.isPending}
@@ -189,12 +220,13 @@ export function LoginPage() {
                     </Box>
 
                     <Button
-                        type="submit"
+                        type="button"
                         fullWidth
                         variant="contained"
                         disabled={signIn.isPending}
                         size="large"
                         endIcon={!signIn.isPending && <BoltIcon />}
+                        onClick={handleSubmit}
                         sx={{ mb: 3, py: 1.5, fontSize: 16 }}
                     >
                         {signIn.isPending ? (
