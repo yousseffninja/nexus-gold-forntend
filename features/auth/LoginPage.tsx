@@ -14,17 +14,19 @@ import {
     Button,
     Alert,
     CircularProgress,
-    Card,
-    CardContent,
     Typography,
     Box,
     InputAdornment,
     IconButton,
+    Checkbox,
+    FormControlLabel,
+    Divider,
 } from "@mui/material";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import BoltIcon from "@mui/icons-material/Bolt";
 import type { AxiosError } from "axios";
 import type { ApiResponse } from "@/types/api";
 
@@ -46,17 +48,10 @@ export function LoginPage() {
     });
 
     const formik = useFormik({
-        initialValues: {
-            email: "",
-            password: "",
-        },
+        initialValues: { email: "", password: "" },
         validationSchema: schema,
         onSubmit: async (values) => {
-            try {
-                await signIn.mutateAsync(values);
-            } catch (error) {
-                console.error("Login error:", error);
-            }
+            await signIn.mutateAsync(values);
         },
     });
 
@@ -66,149 +61,209 @@ export function LoginPage() {
         : null;
 
     return (
-        <AuthLayout>
-            <Card
-                elevation={0}
-                sx={{
-                    background:
-                        "linear-gradient(145deg, rgba(26,26,26,0.97) 0%, rgba(10,10,10,0.99) 100%)",
-                    border: "1px solid rgba(212,149,14,0.2)",
-                    boxShadow:
-                        "0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(212,149,14,0.08)",
-                }}
-            >
-                <CardContent sx={{ p: 4 }}>
-                    <Box sx={{ textAlign: "center", mb: 4 }}>
-                        <Typography
-                            variant="h4"
-                            sx={{
-                                fontFamily: "Georgia, serif",
-                                fontWeight: 700,
-                                background:
-                                    "linear-gradient(135deg, #b8760a, #f5de94, #d4950e)",
-                                backgroundClip: "text",
-                                WebkitBackgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
-                                mb: 1,
-                            }}
-                        >
-                            {t("welcomeBack")}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {t("loginSubtitle")}
-                        </Typography>
+        <>
+            <div className="flex items-center justify-between mb-8">
+                {/* Mobile logo */}
+                <div className="flex lg:hidden items-center gap-2">
+                    <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="22" stroke="url(#pg2)" strokeWidth="1.5" fill="rgba(124,58,237,0.15)" />
+                        <text x="24" y="30" textAnchor="middle" fill="url(#pg2)" fontSize="18" fontFamily="system-ui" fontWeight="bold">N</text>
+                        <defs>
+                            <linearGradient id="pg2" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stopColor="#a78bfa" />
+                                <stop offset="100%" stopColor="#7c3aed" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span className="text-white font-bold">NexusGold</span>
+                </div>
+                <div className="hidden lg:block" />
+            </div>
+
+            {/* Form area */}
+            <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+                <div className="mb-8">
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            fontWeight: 800,
+                            mb: 1,
+                            color: "white",
+                            fontFamily: "'Space Grotesk', system-ui, sans-serif"
+                    }}
+                    >
+                        {t("welcomeBackGamer")}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {t("loginSubtitleGamer")}
+                    </Typography>
+                </div>
+
+                {apiError && (
+                    <Alert severity="error" sx={{ mb: 3, borderRadius: 3 }}>
+                        {apiError}
+                    </Alert>
+                )}
+
+                <Box component="form" onSubmit={formik.handleSubmit} noValidate>
+                    <Typography variant="caption" sx={{ color: "text.secondary", mb: 0.5, display: "block" }}>
+                        {t("email")}
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        id="email"
+                        name="email"
+                        placeholder="commander@nexusgold.gg"
+                        type="email"
+                        autoComplete="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                        disabled={signIn.isPending}
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <EmailOutlinedIcon sx={{ color: "text.secondary", fontSize: 18 }} />
+                                    </InputAdornment>
+                                ),
+                            }
+                        }}
+                        sx={{ mb: 2 }}
+                    />
+
+                    <Typography variant="caption" sx={{ color: "text.secondary", mb: 0.5, display: "block" }}>
+                        {t("securePassword")}
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        id="password"
+                        name="password"
+                        placeholder="••••••••"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                        disabled={signIn.isPending}
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <LockOutlinedIcon sx={{ color: "text.secondary", fontSize: 18 }} />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => setShowPassword((s) => !s)} edge="end" size="small">
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }
+                        }}
+                        sx={{ mb: 1 }}
+                    />
+
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    size="small"
+                                    sx={{
+                                    color: "text.secondary",
+                                    "&.Mui-checked": { color: "primary.main" },
+                                    }}
+                                />
+                            }
+                            label={<Typography variant="caption" color="text.secondary">{t("rememberMe")}</Typography>}
+                        />
+                        <Link href="/forgot-password"
+                              className="text-on-variant hover:text-primary text-xs transition-colors">
+                            {t("forgotPassword")}
+                        </Link>
                     </Box>
 
-                    {apiError && (
-                        <Alert severity="error" sx={{ mb: 3 }}>
-                            {apiError}
-                        </Alert>
-                    )}
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        disabled={signIn.isPending}
+                        size="large"
+                        endIcon={!signIn.isPending && <BoltIcon />}
+                        sx={{ mb: 3, py: 1.5, fontSize: 16 }}
+                    >
+                        {signIn.isPending ? (
+                            <CircularProgress size={22} sx={{ color: "inherit" }} />
+                        ) : (
+                            t("signIn")
+                        )}
+                    </Button>
 
-                    <Box component="form" onSubmit={formik.handleSubmit} noValidate>
-                        <TextField
-                            fullWidth
-                            id="email"
-                            name="email"
-                            label={t("email")}
-                            type="email"
-                            autoComplete="email"
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.email && Boolean(formik.errors.email)}
-                            helperText={formik.touched.email && formik.errors.email}
-                            disabled={signIn.isPending}
-                            slotProps={{
-                                input: {
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <EmailOutlinedIcon
-                                                sx={{ color: "text.secondary", fontSize: 20 }}
-                                            />
-                                        </InputAdornment>
-                                    ),
-                                },
-                            }}
-                            sx={{ mb: 2 }}
-                        />
-
-                        <TextField
-                            fullWidth
-                            id="password"
-                            name="password"
-                            label={t("password")}
-                            type={showPassword ? "text" : "password"}
-                            autoComplete="current-password"
-                            value={formik.values.password}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.password && Boolean(formik.errors.password)}
-                            helperText={formik.touched.password && formik.errors.password}
-                            disabled={signIn.isPending}
-                            slotProps={{
-                                input: {
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <LockOutlinedIcon
-                                                sx={{ color: "text.secondary", fontSize: 20 }}
-                                            />
-                                        </InputAdornment>
-                                    ),
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={() => setShowPassword((s) => !s)}
-                                                edge="end"
-                                                size="small"
-                                            >
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                },
-                            }}
-                            sx={{ mb: 1 }}
-                        />
-
-                        <Box sx={{ textAlign: "end", mb: 3 }}>
-                            <Link
-                                href="/forgot-password"
-                                className="text-gold-500 hover:text-gold-300 text-sm transition-colors"
-                            >
-                                {t("forgotPassword")}
-                            </Link>
-                        </Box>
-
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            disabled={signIn.isPending}
-                            size="large"
-                            sx={{ mb: 3, py: 1.5 }}
-                        >
-                            {signIn.isPending ? (
-                                <CircularProgress size={22} sx={{ color: "inherit" }} />
-                            ) : (
-                                t("signIn")
-                            )}
-                        </Button>
-
-                        <Box sx={{ textAlign: "center" }}>
-                            <Typography variant="body2" color="text.secondary">
-                                {t("noAccount")}{" "}
-                                <Link
-                                    href="/register"
-                                    className="text-gold-500 hover:text-gold-300 font-semibold transition-colors"
-                                >
-                                    {t("signUp")}
-                                </Link>
+                    {/* Social connect */}
+                    <Box sx={{ mb: 3 }}>
+                        <Divider sx={{ mb: 2 }}>
+                            <Typography variant="caption" sx={{ color: "text.secondary", letterSpacing: 2, fontSize: 10 }}>
+                                {t("socialConnect")}
                             </Typography>
+                        </Divider>
+                        <Box sx={{ display: "flex", gap: 2 }}>
+                            <Button
+                                fullWidth
+                                variant="outlined"
+                                sx={{
+                                    borderColor: "surface.bright",
+                                    color: "text.secondary",
+                                    borderRadius: 3,
+                                    py: 1.2,
+                                    "&:hover": { borderColor: "primary.main", color: "white" },
+                                }}
+                            >
+                                🎮 {t("steam")}
+                            </Button>
+                            <Button
+                                fullWidth
+                                variant="outlined"
+                                sx={{
+                                    borderColor: "surface.bright",
+                                    color: "text.secondary",
+                                    borderRadius: 3,
+                                    py: 1.2,
+                                    "&:hover": { borderColor: "primary.main", color: "white" },
+                                }}
+                            >
+                                🎧 {t("discord")}
+                            </Button>
                         </Box>
                     </Box>
-                </CardContent>
-            </Card>
-        </AuthLayout>
+
+                    <Box sx={{ textAlign: "center" }}>
+                        <Typography variant="body2" color="text.secondary">
+                            {t("newToNexusGold")}{" "}
+                            <Link href="/register"
+                                  className="text-primary hover:text-purple-300 font-bold transition-colors">
+                                {t("createAccount")}
+                            </Link>
+                        </Typography>
+                    </Box>
+                </Box>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-8 text-center">
+                <div className="flex justify-center gap-4 mb-2">
+                    <span className="text-on-variant text-xs cursor-pointer hover:text-white transition-colors">{t("privacyPolicy")}</span>
+                    <span className="text-on-variant text-xs cursor-pointer hover:text-white transition-colors">{t("termsOfService")}</span>
+                    <span className="text-on-variant text-xs cursor-pointer hover:text-white transition-colors">{t("cookiePolicy")}</span>
+                </div>
+                <p className="text-on-variant text-xs">
+                    {t("copyright")}
+                </p>
+            </div>
+        </>
     );
 }
