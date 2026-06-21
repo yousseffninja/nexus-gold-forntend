@@ -25,6 +25,9 @@ export function VerifyEmailPage() {
     const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const hasSentCodeRef = useRef(false);
+    const hasSetCanResendRef = useRef(false);
+    const [countdown, setCountdown] = useState(60);
+    const [canResend, setCanResend] = useState(false);
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("verifyEmail");
@@ -34,6 +37,33 @@ export function VerifyEmailPage() {
             hasSentCodeRef.current = true;
         }
     }, [sendCode]);
+
+    useEffect(() => {
+        if (countdown > 0) {
+            hasSetCanResendRef.current = false;
+            const timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        } else if (!hasSetCanResendRef.current) {
+            setCanResend(true);
+            hasSetCanResendRef.current = true;
+        }
+    }, [countdown]);
+
+    const handleResendCode = () => {
+        if (email && canResend) {
+            sendCode.mutate({ email });
+            setCountdown(60);
+            setCanResend(false);
+        }
+    };
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    };
 
     const handleCodeChange = (index: number, value: string) => {
         if (value.length > 1) {
@@ -171,6 +201,23 @@ export function VerifyEmailPage() {
                         t("verifyEmail")
                     )}
                 </Button>
+                <Box sx={{ textAlign: "center", mt: 2 }}>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                        {t("didntReceiveCode")}{" "}
+                        <Typography
+                            component="span"
+                            onClick={handleResendCode}
+                            sx={{
+                                color: canResend ? "primary.main" : "text.disabled",
+                                cursor: canResend ? "pointer" : "not-allowed",
+                                fontWeight: 600,
+                                textDecoration: canResend ? "underline" : "none",
+                            }}
+                        >
+                            {t("resendCode")} ({formatTime(countdown)})
+                        </Typography>
+                    </Typography>
+                </Box>
             </Box>
         </div>
     );
