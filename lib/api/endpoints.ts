@@ -11,6 +11,7 @@ import type {
     ForgotPasswordRequest,
     ResetPasswordRequest,
     ChangePasswordRequest,
+    VerifyResetPasswordRequest,
 } from "@/types/api";
 
 export const authApi = {
@@ -47,6 +48,12 @@ export const authApi = {
     resetPassword: (data: ResetPasswordRequest) =>
         apiClient
             .post<ApiResponse>("/api/v1/auth/reset-password", data)
+            .then((r) => r.data),
+
+
+    verifyResetPassword: (data: VerifyResetPasswordRequest) =>
+        apiClient
+            .post<ApiResponse>("/api/v1/auth/verify-reset-code", data)
             .then((r) => r.data),
 };
 
