@@ -60,6 +60,7 @@ export function RegisterPage() {
                 ...values,
                 email: values.email.toLowerCase(),
             });
+            localStorage.setItem("verifyEmail", values.email.toLowerCase());
             router.push("/verify-email");
         },
     });
