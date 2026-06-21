@@ -93,7 +93,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           </div>
 
         </div>
-        <p className="text-white/40 text-xs mt-6">{t("est2024")}</p>
+        <p className="text-white/40 text-xs mt-6">{t("est2026")}</p>
       </div>
 
       {/* Right Side - Auth Content */}
