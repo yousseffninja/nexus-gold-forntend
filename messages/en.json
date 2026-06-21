@@ -38,7 +38,7 @@
     "resetPasswordTitle": "Reset Password",
     "resetPasswordDesc": "Enter the code sent to your email and set a new password.",
     "verifyEmailTitle": "Verify Your Email",
-    "verifyEmailDesc": "Enter the verification code sent to your email address.",
+    "verifyEmailDesc": "We've sent a 6-digit verification code to your\nregistered email. Enter it below to secure your\naccess..",
     "welcomeBack": "Welcome Back",
     "welcomeBackGamer": "Welcome Back, Gamer.",
     "createAccount": "Join Nexus Gold",

@@ -1,210 +1,224 @@
 "use client";
 
-import { useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/lib/i18n/navigation";
 import { useSendVerificationCode, useVerifyEmail } from "@/features/auth/hooks";
-import { AuthLayout } from "@/components/layout/AuthLayout";
 import {
-    TextField,
     Button,
     Alert,
     CircularProgress,
-    Card,
-    CardContent,
     Typography,
     Box,
-    InputAdornment,
+    TextField,
 } from "@mui/material";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
+import BoltIcon from "@mui/icons-material/Bolt";
 import type { AxiosError } from "axios";
 import type { ApiResponse } from "@/types/api";
 
 export function VerifyEmailPage() {
     const t = useTranslations("auth");
-    const tv = useTranslations("validation");
     const router = useRouter();
     const sendCode = useSendVerificationCode();
     const verifyEmail = useVerifyEmail();
-    const [codeSent, setCodeSent] = useState(false);
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState<string>("");
+    const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const hasSentCodeRef = useRef(false);
+    const hasSetCanResendRef = useRef(false);
+    const [countdown, setCountdown] = useState(60);
+    const [canResend, setCanResend] = useState(false);
 
-    const emailSchema = Yup.object({
-        email: Yup.string().email(tv("emailInvalid")).required(tv("required")),
-    });
+    useEffect(() => {
+        const storedEmail = localStorage.getItem("verifyEmail");
+        if (storedEmail && !hasSentCodeRef.current) {
+            setEmail(storedEmail);
+            sendCode.mutate({ email: storedEmail });
+            hasSentCodeRef.current = true;
+        }
+    }, [sendCode]);
 
-    const verifySchema = Yup.object({
-        code: Yup.string().required(tv("codeRequired")),
-    });
+    useEffect(() => {
+        if (countdown > 0) {
+            hasSetCanResendRef.current = false;
+            const timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        } else if (!hasSetCanResendRef.current) {
+            setCanResend(true);
+            hasSetCanResendRef.current = true;
+        }
+    }, [countdown]);
 
-    const emailFormik = useFormik({
-        initialValues: { email: "" },
-        validationSchema: emailSchema,
-        onSubmit: async (values) => {
-            await sendCode.mutateAsync({ email: values.email });
-            setEmail(values.email);
-            setCodeSent(true);
-        },
-    });
+    const handleResendCode = () => {
+        if (email && canResend) {
+            sendCode.mutate({ email });
+            setCountdown(60);
+            setCanResend(false);
+        }
+    };
 
-    const verifyFormik = useFormik({
-        initialValues: { code: "" },
-        validationSchema: verifySchema,
-        onSubmit: async (values) => {
-            await verifyEmail.mutateAsync({ email, code: values.code });
-            router.push("/login");
-        },
-    });
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    };
+
+    const handleCodeChange = (index: number, value: string) => {
+        if (value.length > 1) {
+            value = value.slice(0, 1);
+        }
+        const newCode = [...code];
+        newCode[index] = value;
+        setCode(newCode);
+
+        if (value && index < 5) {
+            inputRefs.current[index + 1]?.focus();
+        }
+    };
+
+    const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+        if (e.key === "Backspace" && !code[index] && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData("text").slice(0, 6);
+        const newCode = [...code];
+        for (let i = 0; i < pastedData.length; i++) {
+            newCode[i] = pastedData[i];
+        }
+        setCode(newCode);
+        const nextEmptyIndex = newCode.findIndex((c) => c === "");
+        if (nextEmptyIndex !== -1) {
+            inputRefs.current[nextEmptyIndex]?.focus();
+        } else {
+            inputRefs.current[5]?.focus();
+        }
+    };
+
+    const handleSubmit = async () => {
+        const fullCode = code.join("");
+        if (!email || fullCode.length !== 6) {
+            return;
+        }
+        await verifyEmail.mutateAsync({ email, code: fullCode });
+        localStorage.removeItem("verifyEmail");
+        router.push("/login");
+    };
 
     const apiError =
         (sendCode.error as AxiosError<ApiResponse>)?.response?.data?.message ??
         (verifyEmail.error as AxiosError<ApiResponse>)?.response?.data?.message ??
         null;
 
+    if (!email) {
+        return (
+            <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+                <Alert severity="error" sx={{ mb: 3, borderRadius: 3 }}>
+                    No email found. Please sign up first.
+                </Alert>
+            </div>
+        );
+    }
+
     return (
-        <AuthLayout>
-            <Card
-                elevation={0}
-                sx={{
-                    background:
-                        "linear-gradient(145deg, rgba(26,26,26,0.97) 0%, rgba(10,10,10,0.99) 100%)",
-                    border: "1px solid rgba(212,149,14,0.2)",
-                    boxShadow:
-                        "0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(212,149,14,0.08)",
-                }}
-            >
-                <CardContent sx={{ p: 4 }}>
-                    <Box sx={{ textAlign: "center", mb: 4 }}>
-                        <VerifiedOutlinedIcon
-                            sx={{ fontSize: 48, color: "primary.main", mb: 1 }}
-                        />
-                        <Typography
-                            variant="h5"
+        <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+            <div className="mb-8">
+                <Typography
+                    variant="h4"
+                    sx={{
+                        fontWeight: 800,
+                        mb: 1,
+                        color: "white",
+                        fontFamily: "'Space Grotesk', system-ui, sans-serif"
+                    }}
+                >
+                    {t("verifyEmailTitle")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {t("verifyEmailDesc")}
+                </Typography>
+            </div>
+
+            {apiError && (
+                <Alert severity="error" sx={{ mb: 3, borderRadius: 3 }}>
+                    {apiError}
+                </Alert>
+            )}
+
+            <Box>
+                <Typography variant="caption" sx={{ color: "text.secondary", mb: 2, display: "block" }}>
+                    {t("verificationCode")}
+                </Typography>
+                <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
+                    {code.map((digit, index) => (
+                        <TextField
+                            key={index}
+                            inputRef={(el) => (inputRefs.current[index] = el)}
+                            value={digit}
+                            onChange={(e) => handleCodeChange(index, e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(index, e)}
+                            onPaste={index === 0 ? handlePaste : undefined}
+                            variant="outlined"
+                            slotProps={{
+                                htmlInput: {
+                                    maxLength: 1,
+                                    style: {
+                                        textAlign: "center",
+                                        fontSize: 24,
+                                        fontWeight: "bold",
+                                        padding: "12px",
+                                    },
+                                },
+                            }}
                             sx={{
-                                fontFamily: "Georgia, serif",
-                                fontWeight: 700,
-                                background:
-                                    "linear-gradient(135deg, #b8760a, #f5de94, #d4950e)",
-                                backgroundClip: "text",
-                                WebkitBackgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
-                                mb: 1,
+                                width: 50,
+                                height: 60,
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: 2,
+                                },
+                            }}
+                            disabled={verifyEmail.isPending}
+                        />
+                    ))}
+                </Box>
+                <Button
+                    fullWidth
+                    variant="contained"
+                    disabled={verifyEmail.isPending}
+                    size="large"
+                    endIcon={!verifyEmail.isPending && <BoltIcon />}
+                    onClick={handleSubmit}
+                    sx={{ mb: 3, py: 1.5, fontSize: 16 }}
+                >
+                    {verifyEmail.isPending ? (
+                        <CircularProgress size={22} sx={{ color: "inherit" }} />
+                    ) : (
+                        t("verifyEmail")
+                    )}
+                </Button>
+                <Box sx={{ textAlign: "center", mt: 2 }}>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                        {t("didntReceiveCode")}{" "}
+                        <Typography
+                            component="span"
+                            onClick={handleResendCode}
+                            sx={{
+                                color: canResend ? "primary.main" : "text.disabled",
+                                cursor: canResend ? "pointer" : "not-allowed",
+                                fontWeight: 600,
+                                textDecoration: canResend ? "underline" : "none",
                             }}
                         >
-                            {t("verifyEmailTitle")}
+                            {t("resendCode")} ({formatTime(countdown)})
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {t("verifyEmailDesc")}
-                        </Typography>
-                    </Box>
-
-                    {apiError && (
-                        <Alert severity="error" sx={{ mb: 3 }}>
-                            {apiError}
-                        </Alert>
-                    )}
-                    {sendCode.isSuccess && (
-                        <Alert severity="success" sx={{ mb: 3 }}>
-                            {t("codeSent")}
-                        </Alert>
-                    )}
-
-                    {!codeSent ? (
-                        <Box
-                            component="form"
-                            onSubmit={emailFormik.handleSubmit}
-                            noValidate
-                        >
-                            <TextField
-                                fullWidth
-                                id="email"
-                                name="email"
-                                label={t("email")}
-                                type="email"
-                                value={emailFormik.values.email}
-                                onChange={emailFormik.handleChange}
-                                onBlur={emailFormik.handleBlur}
-                                error={
-                                    emailFormik.touched.email &&
-                                    Boolean(emailFormik.errors.email)
-                                }
-                                helperText={
-                                    emailFormik.touched.email && emailFormik.errors.email
-                                }
-                                disabled={sendCode.isPending}
-                                slotProps={{
-                                    input: {
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <EmailOutlinedIcon
-                                                    sx={{ color: "text.secondary", fontSize: 20 }}
-                                                />
-                                            </InputAdornment>
-                                        ),
-                                    },
-                                }}
-                                sx={{ mb: 3 }}
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                disabled={sendCode.isPending}
-                                size="large"
-                                sx={{ py: 1.5 }}
-                            >
-                                {sendCode.isPending ? (
-                                    <CircularProgress size={22} sx={{ color: "inherit" }} />
-                                ) : (
-                                    t("sendCode")
-                                )}
-                            </Button>
-                        </Box>
-                    ) : (
-                        <Box
-                            component="form"
-                            onSubmit={verifyFormik.handleSubmit}
-                            noValidate
-                        >
-                            <TextField
-                                fullWidth
-                                id="code"
-                                name="code"
-                                label={t("verificationCode")}
-                                value={verifyFormik.values.code}
-                                onChange={verifyFormik.handleChange}
-                                onBlur={verifyFormik.handleBlur}
-                                error={
-                                    verifyFormik.touched.code &&
-                                    Boolean(verifyFormik.errors.code)
-                                }
-                                helperText={
-                                    verifyFormik.touched.code && verifyFormik.errors.code
-                                }
-                                disabled={verifyEmail.isPending}
-                                sx={{ mb: 3 }}
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                disabled={verifyEmail.isPending}
-                                size="large"
-                                sx={{ py: 1.5 }}
-                            >
-                                {verifyEmail.isPending ? (
-                                    <CircularProgress size={22} sx={{ color: "inherit" }} />
-                                ) : (
-                                    t("verifyEmail")
-                                )}
-                            </Button>
-                        </Box>
-                    )}
-                </CardContent>
-            </Card>
-        </AuthLayout>
+                    </Typography>
+                </Box>
+            </Box>
+        </div>
     );
 }
