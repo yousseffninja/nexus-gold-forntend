@@ -6,5 +6,5 @@ interface PageProps {
 
 export default async function LocaleIndexPage({ params }: PageProps) {
     const { locale } = await params;
-    redirect(`/${locale}/login`);
+    redirect(`/${locale}/home`);
 }
