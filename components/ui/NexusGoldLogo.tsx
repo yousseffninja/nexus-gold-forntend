@@ -9,9 +9,9 @@ interface LogoProps {
 export function NexusGoldLogo({ size = "md" }: LogoProps) {
     const t = useTranslations("common");
     const sizes = {
-        sm: { icon: 24, text: "text-lg" },
-        md: { icon: 32, text: "text-2xl" },
-        lg: { icon: 48, text: "text-4xl" },
+        sm: { icon: 28, text: "text-lg" },
+        md: { icon: 36, text: "text-2xl" },
+        lg: { icon: 52, text: "text-4xl" },
     };
     const { icon, text } = sizes[size];
 
@@ -24,41 +24,49 @@ export function NexusGoldLogo({ size = "md" }: LogoProps) {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <polygon
-                    points="24,4 44,14 44,34 24,44 4,34 4,14"
+                <circle
+                    cx="24"
+                    cy="24"
+                    r="22"
+                    fill="url(#purpleGrad)"
+                    opacity="0.15"
+                />
+                <circle
+                    cx="24"
+                    cy="24"
+                    r="22"
+                    stroke="url(#purpleGrad)"
+                    strokeWidth="1.5"
                     fill="none"
-                    stroke="url(#goldGrad)"
-                    strokeWidth="2"
                 />
                 <text
                     x="24"
-                    y="29"
+                    y="30"
                     textAnchor="middle"
-                    fill="url(#goldGrad)"
-                    fontSize="16"
-                    fontFamily="Georgia, serif"
+                    fill="url(#purpleGrad)"
+                    fontSize="18"
+                    fontFamily="system-ui, sans-serif"
                     fontWeight="bold"
                 >
                     N
                 </text>
                 <defs>
                     <linearGradient
-                        id="goldGrad"
+                        id="purpleGrad"
                         x1="0"
                         y1="0"
                         x2="48"
                         y2="48"
                         gradientUnits="userSpaceOnUse"
                     >
-                        <stop offset="0%" stopColor="#b8760a" />
-                        <stop offset="50%" stopColor="#f5de94" />
-                        <stop offset="100%" stopColor="#d4950e" />
+                        <stop offset="0%" stopColor="#a78bfa" />
+                        <stop offset="100%" stopColor="#7c3aed" />
                     </linearGradient>
                 </defs>
             </svg>
             <span
-                className={`gold-shimmer font-bold ${text} tracking-widest uppercase`}
-                style={{ fontFamily: "Georgia, serif" }}
+                className={`nexus-gradient-text font-bold ${text} tracking-wide`}
+                style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}
             >
         {t("nexusGold")}
       </span>

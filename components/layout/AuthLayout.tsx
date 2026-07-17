@@ -1,58 +1,105 @@
-import { NexusGoldLogo } from "@/components/ui/NexusGoldLogo";
-import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { useTranslations } from "next-intl";
 
 interface AuthLayoutProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export function AuthLayout({ children }: AuthLayoutProps) {
-    return (
-        <div className="min-h-screen bg-obsidian-950 relative overflow-hidden flex flex-col">
-            {/* Background decoration */}
-            <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-gold-600 opacity-5 blur-[120px]" />
-                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-gold-500 opacity-3 blur-[100px]" />
-                <svg
-                    className="absolute inset-0 w-full h-full"
-                    viewBox="0 0 1440 900"
-                    preserveAspectRatio="xMidYMid slice"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <line
-                        x1="0" y1="450" x2="1440" y2="450"
-                        stroke="rgba(212,149,14,0.04)" strokeWidth="1"
-                    />
-                    <line
-                        x1="720" y1="0" x2="720" y2="900"
-                        stroke="rgba(212,149,14,0.04)" strokeWidth="1"
-                    />
-                    <circle
-                        cx="720" cy="450" r="300"
-                        stroke="rgba(212,149,14,0.05)" strokeWidth="1"
-                    />
-                    <circle
-                        cx="720" cy="450" r="500"
-                        stroke="rgba(212,149,14,0.03)" strokeWidth="1"
-                    />
-                </svg>
-            </div>
+  const t = useTranslations("layout");
+  const tc = useTranslations("common");
+  return (
+    <div className="min-h-screen flex bg-surface-low">
+      {/* Left Side - Background Section */}
+      <div
+        className="hidden lg:flex lg:w-[60%] relative overflow-hidden flex-col  p-10"
+        style={{
+          backgroundImage: "url('/bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/70" />
 
-            {/* Top bar */}
-            <header className="relative z-10 flex items-center justify-between px-6 py-4 border-b border-gold-600/10">
-                <NexusGoldLogo size="sm" />
-                <LanguageSwitcher />
-            </header>
+        {/* Logo */}
+        <div className="relative z-10 flex items-center gap-3">
+          <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
+            <circle
+              cx="24"
+              cy="24"
+              r="22"
+              stroke="url(#pg)"
+              strokeWidth="1.5"
+              fill="rgba(124,58,237,0.15)"
+            />
 
-            {/* Main content */}
-            <main className="flex-1 flex items-center justify-center p-4 relative z-10">
-                <div className="w-full max-w-md">{children}</div>
-            </main>
+            <text
+              x="24"
+              y="30"
+              textAnchor="middle"
+              fill="url(#pg)"
+              fontSize="18"
+              fontFamily="system-ui"
+              fontWeight="bold"
+            >
+              N
+            </text>
 
-            {/* Footer */}
-            <footer className="relative z-10 text-center py-4 text-obsidian-400 text-xs border-t border-gold-600/10">
-                © 2026 Nexus Gold. All rights reserved.
-            </footer>
+            <defs>
+              <linearGradient
+                id="pg"
+                x1="0"
+                y1="0"
+                x2="48"
+                y2="48"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0%" stopColor="#a78bfa" />
+                <stop offset="100%" stopColor="#7c3aed" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <span
+            className="text-white text-2xl font-bold tracking-wide"
+            style={{
+              fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            }}
+          >
+            {tc("nexusGold")}
+          </span>
         </div>
-    );
+
+        {/* Bottom Content */}
+        <div className="relative z-10 h-full w-full flex flex-col justify-center items-center">
+          <h2
+            className="text-white text-5xl font-bold mb-2"
+            style={{
+              fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            }}
+          >
+            {tc("nexusGold")}
+          </h2>
+
+          <p className="text-purple-300 text-2x mb-4">
+            {t("eliteGamingHub")}
+          </p>
+
+          <div className="flex items-center gap-2 bg-black/25 p-2 rounded-full stroke-green-700 stroke-2">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-green-400 text-xs font-semibold tracking-widest uppercase">
+              {t("liveMarketplaceActive")}
+            </span>
+          </div>
+
+        </div>
+        <p className="text-white/40 text-xs mt-6">{t("est2024")}</p>
+      </div>
+
+      {/* Right Side - Auth Content */}
+      <div className="w-full lg:w-[40%] flex flex-col justify-between bg-surface-low px-8 py-8 overflow-y-auto">
+        {children}
+      </div>
+    </div>
+  );
 }
