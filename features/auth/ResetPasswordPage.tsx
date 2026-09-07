@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/lib/i18n/navigation";
-import { useResetPassword } from "@/features/auth/hooks";
+import { useResetPassword, useVerifyResetPassword } from "@/features/auth/hooks";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import {
     TextField,
@@ -28,6 +28,7 @@ export function ResetPasswordPage() {
     const tv = useTranslations("validation");
     const ts = useTranslations("settings");
     const router = useRouter();
+    const verifyResetPassword = useVerifyResetPassword();
     const resetPassword = useResetPassword();
 
     const schema = Yup.object({
@@ -50,14 +51,27 @@ export function ResetPasswordPage() {
         },
         validationSchema: schema,
         onSubmit: async ({ email, code, newPassword }) => {
-            await resetPassword.mutateAsync({ email, code, newPassword });
+            const verification = await verifyResetPassword.mutateAsync({ email, code });
+            const passwordResetToken =
+                (verification as unknown as { passwordResetToken?: string })
+                    .passwordResetToken;
+
+            if (!passwordResetToken) {
+                throw new Error("Password reset token was not returned.");
+            }
+
+            await resetPassword.mutateAsync({ passwordResetToken, newPassword });
             router.push("/login");
         },
     });
 
     const apiError =
-        (resetPassword.error as AxiosError<ApiResponse>)?.response?.data
-            ?.message ?? null;
+        (verifyResetPassword.error as AxiosError<ApiResponse>)?.response?.data
+            ?.message ??
+        (resetPassword.error as AxiosError<ApiResponse>)?.response?.data?.message ??
+        null;
+
+    const isPending = verifyResetPassword.isPending || resetPassword.isPending;
 
     return (
         <AuthLayout>
@@ -112,7 +126,7 @@ export function ResetPasswordPage() {
                             onBlur={formik.handleBlur}
                             error={formik.touched.email && Boolean(formik.errors.email)}
                             helperText={formik.touched.email && formik.errors.email}
-                            disabled={resetPassword.isPending}
+                            disabled={isPending}
                             slotProps={{
                                 input: {
                                     startAdornment: (
@@ -136,7 +150,7 @@ export function ResetPasswordPage() {
                             onBlur={formik.handleBlur}
                             error={formik.touched.code && Boolean(formik.errors.code)}
                             helperText={formik.touched.code && formik.errors.code}
-                            disabled={resetPassword.isPending}
+                            disabled={isPending}
                             sx={{ mb: 2 }}
                         />
                         <TextField
@@ -155,7 +169,7 @@ export function ResetPasswordPage() {
                             helperText={
                                 formik.touched.newPassword && formik.errors.newPassword
                             }
-                            disabled={resetPassword.isPending}
+                            disabled={isPending}
                             slotProps={{
                                 input: {
                                     startAdornment: (
@@ -186,7 +200,7 @@ export function ResetPasswordPage() {
                                 formik.touched.confirmPassword &&
                                 formik.errors.confirmPassword
                             }
-                            disabled={resetPassword.isPending}
+                            disabled={isPending}
                             slotProps={{
                                 input: {
                                     startAdornment: (
@@ -204,11 +218,11 @@ export function ResetPasswordPage() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            disabled={resetPassword.isPending}
+                            disabled={isPending}
                             size="large"
                             sx={{ py: 1.5 }}
                         >
-                            {resetPassword.isPending ? (
+                            {isPending ? (
                                 <CircularProgress size={22} sx={{ color: "inherit" }} />
                             ) : (
                                 t("resetPassword")
