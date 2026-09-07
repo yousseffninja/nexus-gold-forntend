@@ -14,7 +14,11 @@
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج",
     "changePassword": "تغيير كلمة المرور",
-    "language": "اللغة"
+    "language": "اللغة",
+    "marketplace": "السوق",
+    "boosting": "التعزيز",
+    "content": "المحتوى",
+    "help": "المساعدة"
   },
   "auth": {
     "signIn": "تسجيل الدخول",

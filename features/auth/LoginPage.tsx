@@ -39,7 +39,7 @@ export function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
-        if (isAuthenticated) router.push("/dashboard");
+        if (isAuthenticated) router.push("/home");
     }, [isAuthenticated, router]);
 
     const schema = Yup.object({

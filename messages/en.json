@@ -14,7 +14,11 @@
     "settings": "Settings",
     "logout": "Sign Out",
     "changePassword": "Change Password",
-    "language": "Language"
+    "language": "Language",
+    "marketplace": "Marketplace",
+    "boosting": "Boosting",
+    "content": "Content",
+    "help": "Help"
   },
   "auth": {
     "signIn": "Sign In",
@@ -108,4 +112,6 @@
     "liveMarketplaceActive": "Live Marketplace Active",
     "est2024": "EST. 2024"
   }
+  
+
 }
