@@ -34,6 +34,10 @@ export function useResetPassword() {
     return useMutation({ mutationFn: authApi.resetPassword });
 }
 
+export function useVerifyResetPassword() {
+    return useMutation({ mutationFn: authApi.verifyResetPassword });
+}
+
 export function useChangePassword() {
     const queryClient = useQueryClient();
     return useMutation({
